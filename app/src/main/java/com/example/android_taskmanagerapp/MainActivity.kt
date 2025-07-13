@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.android_taskmanagerapp.ui.TaskManagerApp
 import com.example.android_taskmanagerapp.ui.theme.Android_TaskManagerAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,28 +21,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             Android_TaskManagerAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    TaskManagerApp(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Android_TaskManagerAppTheme {
-        Greeting("Android")
     }
 }

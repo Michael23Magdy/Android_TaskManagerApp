@@ -2,7 +2,9 @@ package com.example.android_taskmanagerapp.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,6 +36,7 @@ fun OneTimeTaskComponent(
     Column (
         modifier = modifier
             .fillMaxWidth()
+            .padding(vertical = 8.dp)
     ){
         Row (
             modifier = Modifier
@@ -41,24 +44,17 @@ fun OneTimeTaskComponent(
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton (
-                onClick = onDoneChange
+                onClick = onDoneChange,
+                modifier = Modifier
+                        .size(80.dp)
             ){
-                if(task.isDone()){
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_check_circle_24),
-                        contentDescription = "Checked",
-                        tint = Color.Green,
-                        modifier = Modifier.size(26.dp)
-                    )
-                }
-                else {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_check_circle_24),
-                        contentDescription = "Unchecked",
-                        tint = Color.LightGray,
-                        modifier = Modifier.size(26.dp)
-                    )
-                }
+                Icon(
+                    painter = painterResource(R.drawable.baseline_check_circle_24),
+                    contentDescription = if(task.isDone()) "Checked" else "Unchecked",
+                    tint = if(task.isDone()) Color.Green else Color.LightGray,
+                    modifier = Modifier
+                        .size(50.dp)
+                )
             }
             Text(
                 text = task.title,
@@ -71,17 +67,11 @@ fun OneTimeTaskComponent(
             )
         }
         if(expanded){
+            Spacer(modifier = Modifier.height(5.dp))
             Column(
                 modifier = Modifier.padding(12.dp)
             ) {
-                Text(
-                    text = "Task Description",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Text(
-                    text = task.description,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                DescriptionBox(task.description)
             }
         }
 

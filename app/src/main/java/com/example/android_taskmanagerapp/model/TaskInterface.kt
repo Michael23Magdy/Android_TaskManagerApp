@@ -1,8 +1,12 @@
 package com.example.android_taskmanagerapp.model
 
-interface TaskInterface {
-    var title: String
-    var description: String
+import java.util.Date
+import java.util.UUID
 
-    fun isDone(): Boolean
+abstract class TaskInterface {
+    val id: UUID = UUID.randomUUID()
+    abstract val title: String
+    abstract val description: String
+    val dateCreated: Date = Date()
+    abstract fun isDone(): Boolean
 }
