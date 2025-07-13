@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -78,8 +79,13 @@ fun ProgressTaskComponent(
         if (expanded) {
             Spacer(modifier = Modifier.height(5.dp))
             Column(
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(horizontal = 30.dp)
             ) {
+                    Slider(
+                        value = task.progressValue.toFloat(),
+                        onValueChange = onProgressChange,
+                        valueRange = 0f..task.numSubtasks.toFloat()
+                    )
                 DescriptionBox(task.description)
                 DeleteAndEditButtons(
                     onDelete = onDelete,

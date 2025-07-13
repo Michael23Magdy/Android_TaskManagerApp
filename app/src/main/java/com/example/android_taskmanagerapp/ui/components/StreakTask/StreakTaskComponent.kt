@@ -1,5 +1,8 @@
 package com.example.android_taskmanagerapp.ui.components.StreakTask
 
+import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,17 +57,7 @@ fun StreakTaskComponent(
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onDoubleTap = {
-                            onStreakIncrease()
-                        },
-                        onLongPress = {
-                            onStreakReset()
-                        }
-                    )
-                },
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box() {
@@ -90,6 +83,7 @@ fun StreakTaskComponent(
 
                 }
             }
+
             Column(
                 modifier = Modifier.weight(1F)
             ) {
@@ -103,6 +97,14 @@ fun StreakTaskComponent(
                     color = Color.Gray
                 )
             }
+            IconButton(
+                onClick = onStreakReset,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.outline_rotate_left_24),
+                    contentDescription = null,
+                )
+            }
             ExpandButton(
                 isExpanded = expanded,
                 onExpandChange = { expanded = !expanded }
@@ -111,7 +113,7 @@ fun StreakTaskComponent(
         if (expanded) {
             Spacer(modifier = Modifier.height(5.dp))
             Column(
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(horizontal = 30.dp)
             ) {
                 DescriptionBox(task.description)
                 DeleteAndEditButtons(

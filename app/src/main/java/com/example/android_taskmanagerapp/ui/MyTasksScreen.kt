@@ -87,7 +87,7 @@ fun MyTasksScreen(
                         is OneTimeTask -> {
                             OneTimeTaskComponent(
                                 task = task,
-                                onDoneChange = {},
+                                onDoneChange = { listViewModel.doneTask(task) },
                                 onDelete = { listViewModel.deleteTask(task) },
                                 onEdit = { showEditTaskDialog = task }
                             )
@@ -95,7 +95,7 @@ fun MyTasksScreen(
                         is ProgressTask -> {
                             ProgressTaskComponent(
                                 task = task,
-                                onProgressChange = {},
+                                onProgressChange = { newProgress -> listViewModel.updateProgress(task, newProgress.toInt())},
                                 onDelete = { listViewModel.deleteTask(task) },
                                 onEdit = { showEditTaskDialog = task }
                             )
@@ -103,8 +103,8 @@ fun MyTasksScreen(
                         is StreakTask -> {
                             StreakTaskComponent(
                                 task = task,
-                                onStreakIncrease = {},
-                                onStreakReset = {},
+                                onStreakIncrease = {listViewModel.increaseStreak(task)},
+                                onStreakReset = {listViewModel.resetStreak(task)},
                                 onDelete = { listViewModel.deleteTask(task) },
                                 onEdit = { showEditTaskDialog = task }
                             )

@@ -21,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.android_taskmanagerapp.R
@@ -63,8 +65,13 @@ fun OneTimeTaskComponent(
             }
             Text(
                 text = task.title,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.weight(1F)
+                modifier = Modifier.weight(1F),
+                style = MaterialTheme.typography.headlineSmall.merge(
+                    TextStyle(
+                        textDecoration = if (task.isDone()) TextDecoration.LineThrough else TextDecoration.None,
+                        color = if (task.isDone()) Color.Gray else Color.Black
+                    )
+                )
             )
             ExpandButton(
                 isExpanded = expanded,
