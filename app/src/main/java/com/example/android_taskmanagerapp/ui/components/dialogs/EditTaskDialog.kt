@@ -80,6 +80,7 @@ fun EditTaskDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             Button(
+                enabled = taskTitle.isNotBlank() && (selectedTaskType.name != TaskType.PROGRESS.name || numSubtasks > 0),
                 onClick = {
                     onConfirm(
                         task,
