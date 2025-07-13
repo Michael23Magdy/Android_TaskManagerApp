@@ -1,4 +1,4 @@
-package com.example.android_taskmanagerapp.ui.components
+package com.example.android_taskmanagerapp.ui.components.ProgressTask
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState

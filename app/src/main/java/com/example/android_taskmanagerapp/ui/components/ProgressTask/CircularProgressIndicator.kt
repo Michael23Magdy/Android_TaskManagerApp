@@ -1,4 +1,4 @@
-package com.example.android_taskmanagerapp.ui.components
+package com.example.android_taskmanagerapp.ui.components.ProgressTask
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
@@ -50,7 +50,7 @@ fun CircularProgressIndicator(
         Text(
             text = percentage.toInt().toString(),
             modifier = Modifier.align(Alignment.Center),
-            fontSize = if(percentage >= 100.0f) 10.sp else 14.sp,
+            fontSize = if(percentage >= 100.0f) 12.sp else 16.sp,
             fontWeight =  FontWeight.Bold,
             color = color
         )

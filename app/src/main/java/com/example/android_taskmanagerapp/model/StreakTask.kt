@@ -1,13 +1,14 @@
 package com.example.android_taskmanagerapp.model
 
-import java.util.UUID
+import com.example.android_taskmanagerapp.TaskType
 
 data class StreakTask(
     override val description: String,
     override val title: String,
-    val currentStreak: Int,
-    val longestStreak: Int
-) : TaskInterface() {
+    override val type: TaskType = TaskType.STREAK,
+    val currentStreak: Int = 0,
+    val longestStreak: Int = 0
+) : AbstractTask() {
     override fun isDone(): Boolean {
         return false
     }

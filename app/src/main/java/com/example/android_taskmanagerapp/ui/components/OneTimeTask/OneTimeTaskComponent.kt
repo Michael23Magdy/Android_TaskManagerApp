@@ -1,4 +1,4 @@
-package com.example.android_taskmanagerapp.ui.components
+package com.example.android_taskmanagerapp.ui.components.OneTimeTask
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,11 +25,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.android_taskmanagerapp.R
 import com.example.android_taskmanagerapp.model.OneTimeTask
+import com.example.android_taskmanagerapp.ui.components.DeleteAndEditButtons
+import com.example.android_taskmanagerapp.ui.components.DescriptionBox
+import com.example.android_taskmanagerapp.ui.components.ExpandButton
 
 @Composable
 fun OneTimeTaskComponent(
     task: OneTimeTask,
     onDoneChange: () -> Unit,
+    onDelete: () -> Unit = {},
+    onEdit: () -> Unit = {},
     modifier: Modifier = Modifier
 ){
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -69,9 +74,13 @@ fun OneTimeTaskComponent(
         if(expanded){
             Spacer(modifier = Modifier.height(5.dp))
             Column(
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(horizontal = 30.dp)
             ) {
                 DescriptionBox(task.description)
+                DeleteAndEditButtons(
+                    onDelete = onDelete,
+                    onEdit = onEdit
+                )
             }
         }
 

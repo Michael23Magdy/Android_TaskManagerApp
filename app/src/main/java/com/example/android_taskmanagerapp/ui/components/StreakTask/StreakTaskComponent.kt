@@ -1,4 +1,4 @@
-package com.example.android_taskmanagerapp.ui.components
+package com.example.android_taskmanagerapp.ui.components.StreakTask
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -26,16 +26,24 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.android_taskmanagerapp.R
 import com.example.android_taskmanagerapp.model.OneTimeTask
 import com.example.android_taskmanagerapp.model.ProgressTask
 import com.example.android_taskmanagerapp.model.StreakTask
+import com.example.android_taskmanagerapp.ui.components.DeleteAndEditButtons
+import com.example.android_taskmanagerapp.ui.components.DescriptionBox
+import com.example.android_taskmanagerapp.ui.components.ExpandButton
+import com.example.android_taskmanagerapp.ui.components.OneTimeTask.OneTimeTaskComponent
+import com.example.android_taskmanagerapp.ui.components.ProgressTask.ProgressTaskComponent
 
 @Composable
 fun StreakTaskComponent(
     task: StreakTask,
     onStreakIncrease: () -> Unit,
     onStreakReset: () -> Unit,
+    onDelete: () -> Unit = {},
+    onEdit: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -74,11 +82,12 @@ fun StreakTaskComponent(
                     )
                     Text(
                         text = task.currentStreak.toString(),
-                        style = MaterialTheme.typography.displaySmall,
+                        fontSize = 26.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.Center)
                     )
+
                 }
             }
             Column(
@@ -89,7 +98,7 @@ fun StreakTaskComponent(
                     style = MaterialTheme.typography.headlineSmall,
                 )
                 Text(
-                    text = "double tab to increase streak. hold to reset",
+                    text = "your longest streak is ${task.longestStreak}",
                     style = MaterialTheme.typography.labelSmall,
                     color = Color.Gray
                 )
@@ -104,12 +113,11 @@ fun StreakTaskComponent(
             Column(
                 modifier = Modifier.padding(12.dp)
             ) {
-                Text(
-                    text = "Streak: ${task.longestStreak}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
                 DescriptionBox(task.description)
+                DeleteAndEditButtons(
+                    onDelete = onDelete,
+                    onEdit = onEdit,
+                )
             }
         }
     }

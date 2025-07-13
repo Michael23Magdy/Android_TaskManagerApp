@@ -1,13 +1,13 @@
 package com.example.android_taskmanagerapp.model
 
-import java.util.Date
-import java.util.UUID
+import com.example.android_taskmanagerapp.TaskType
 
 data class OneTimeTask(
     override val title: String,
     override val description: String,
+    override val type: TaskType = TaskType.ONETIME,
     var done: Boolean = false
-) : TaskInterface() {
+) : AbstractTask() {
     override fun isDone(): Boolean {
         return done
     }

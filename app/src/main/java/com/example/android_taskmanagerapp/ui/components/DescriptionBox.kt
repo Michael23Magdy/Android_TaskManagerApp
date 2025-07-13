@@ -13,11 +13,7 @@ fun DescriptionBox(
     description: String,
 ) {
     Text(
-        text = "Task Description",
-        style = MaterialTheme.typography.bodyLarge
-    )
-    Text(
-        text = description,
+        text = description.ifEmpty { "no Description" },
         style = MaterialTheme.typography.bodyMedium,
         color = Color.Gray,
         modifier = Modifier.padding(start = 10.dp)
