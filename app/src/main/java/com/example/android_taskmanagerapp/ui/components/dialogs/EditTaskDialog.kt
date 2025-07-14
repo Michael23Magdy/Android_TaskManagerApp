@@ -67,8 +67,8 @@ fun EditTaskDialog(
                 if(selectedTaskType.name == TaskType.PROGRESS.name){
                     Spacer(modifier = Modifier.height(15.dp))
                     TextField(
-                        value = numSubtasks.toString(),
-                        onValueChange = { numSubtasks = it.toInt() },
+                        value = if(numSubtasks == 0) "" else numSubtasks.toString(),
+                        onValueChange = { numSubtasks = if(it.isEmpty()) 0 else it.toInt() },
                         label = { Text(text = "Number of Subtasks") },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number
