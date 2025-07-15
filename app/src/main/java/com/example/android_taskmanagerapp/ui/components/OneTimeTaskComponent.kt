@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,7 +67,8 @@ fun OneTimeTaskComponent(
             ){
                 Icon(
                     painter = painterResource(R.drawable.baseline_check_circle_24),
-                    contentDescription = if(task.isDone()) "Checked" else "Unchecked",
+                    contentDescription =    if(task.isDone()) stringResource(R.string.checked)
+                                            else              stringResource(R.string.unchecked),
                     tint = if(task.isDone()) Color.Green else Color.LightGray,
                     modifier = Modifier
                         .size(50.dp)

@@ -1,5 +1,6 @@
 package com.example.android_taskmanagerapp.ui.components
 
+import android.text.TextUtils.isDigitsOnly
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,11 +12,11 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -24,9 +25,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.android_taskmanagerapp.R
 import com.example.android_taskmanagerapp.TaskType
 import com.example.android_taskmanagerapp.model.AbstractTask
 import com.example.android_taskmanagerapp.model.ProgressTask
@@ -44,10 +47,10 @@ fun TaskDialog(
     var selectedTaskType by remember { mutableStateOf(initialTask.type) }
     var numSubtasks by remember {
         mutableIntStateOf(if (selectedTaskType.name == TaskType.PROGRESS.name)
-            (initialTask as ProgressTask).numSubtasks else 10)
+            (initialTask as ProgressTask).numSubtasks else 0)
     }
     AlertDialog(
-        title = { Text(text = "Add New Task", textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth() ) },
+        title = { Text(text = "$confirmText Task", textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth() ) },
         text = {
             Column {
                 TaskTypeSelector(
@@ -55,23 +58,27 @@ fun TaskDialog(
                     onTaskTypeSelected = { selectedTaskType = it }
                 )
                 Spacer(modifier = Modifier.height(15.dp))
-                TextField(
+                OutlinedTextField(
                     value = taskTitle,
                     onValueChange = { taskTitle = it },
-                    label = { Text(text = "Task Title") }
+                    label = { Text(text = stringResource(R.string.task_title)) }
                 )
                 Spacer(modifier = Modifier.height(15.dp))
-                TextField(
+                OutlinedTextField(
                     value = taskDescription,
                     onValueChange = {taskDescription = it},
-                    label = { Text(text = "Task Description") }
+                    label = { Text(text = stringResource(R.string.task_description)) }
                 )
                 if(selectedTaskType.name == TaskType.PROGRESS.name){
                     Spacer(modifier = Modifier.height(15.dp))
-                    TextField(
+                    OutlinedTextField(
                         value = if(numSubtasks == 0) "" else numSubtasks.toString(),
-                        onValueChange = { numSubtasks = if(it.isEmpty()) 0 else it.toInt() },
-                        label = { Text(text = "Number of Subtasks") },
+                        onValueChange = { numSubtasks = when{
+                            it.isEmpty() -> 0
+                            isDigitsOnly(it) -> it.toInt()
+                            else -> numSubtasks
+                        }},
+                        label = { Text(text = stringResource(R.string.number_of_subtasks)) },
                         keyboardOptions = KeyboardOptions.Default.copy(
                             keyboardType = KeyboardType.Number
                         )
