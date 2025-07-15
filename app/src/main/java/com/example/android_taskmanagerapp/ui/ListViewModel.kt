@@ -1,6 +1,5 @@
 package com.example.android_taskmanagerapp.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.android_taskmanagerapp.model.AbstractTask
 import com.example.android_taskmanagerapp.model.OneTimeTask
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.UUID
 import kotlin.math.max
-import kotlin.math.min
 
 class ListViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(ListUiState())
@@ -30,18 +28,8 @@ class ListViewModel: ViewModel() {
         })
     }
 
-    fun editTask(oldTask: OneTimeTask, newTask: OneTimeTask) {
-        val newTaskSameId = oldTask.copy(title = newTask.title, description = newTask.description)
-        editTask(newTaskSameId, oldTask.id)
-    }
-
-    fun editTask(oldTask: ProgressTask, newTask: ProgressTask) {
-        val newTaskSameId = oldTask.copy(title = newTask.title, description = newTask.description, numSubtasks = newTask.numSubtasks, progressValue = min(newTask.numSubtasks, oldTask.progressValue))
-        editTask(newTaskSameId, oldTask.id)
-    }
-    fun editTask(oldTask: StreakTask, newTask: StreakTask) {
-        val newTaskSameId = oldTask.copy(title = newTask.title, description = newTask.description)
-        editTask(newTaskSameId, oldTask.id)
+    fun editTask(oldTask: AbstractTask, newTask: AbstractTask){
+        editTask(newTask, oldTask.id)
     }
 
     fun doneTask(task: OneTimeTask) {

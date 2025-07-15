@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Android_TaskManagerApp</string>
+    <string name="my_tasks">My Tasks</string>
+    <string name="no_tasks">No tasks yet</string>
 </resources>

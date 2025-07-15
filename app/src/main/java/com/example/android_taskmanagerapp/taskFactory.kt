@@ -9,11 +9,12 @@ fun taskFactory(
     taskType: TaskType,
     title: String,
     description: String,
-    numSubtasks: Int = 1
+    numSubtasks: Int = 1,
+    progressValue: Int = 0
 ): AbstractTask {
     return when(taskType){
         TaskType.ONETIME -> OneTimeTask(title = title, description = description)
         TaskType.STREAK -> StreakTask(title = title, description = description)
-        TaskType.PROGRESS -> ProgressTask(title = title, description = description, numSubtasks = numSubtasks)
+        TaskType.PROGRESS -> ProgressTask(title = title, description = description, numSubtasks = numSubtasks, progressValue = progressValue)
     }
 }

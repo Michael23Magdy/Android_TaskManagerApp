@@ -2,7 +2,7 @@ package com.example.android_taskmanagerapp.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,8 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -40,101 +44,44 @@ import com.example.android_taskmanagerapp.model.AbstractTask
 import com.example.android_taskmanagerapp.model.OneTimeTask
 import com.example.android_taskmanagerapp.model.ProgressTask
 import com.example.android_taskmanagerapp.model.StreakTask
-import com.example.android_taskmanagerapp.ui.components.dialogs.AddTaskDialog
+import com.example.android_taskmanagerapp.ui.components.TaskDialog
 import com.example.android_taskmanagerapp.ui.components.OneTimeTask.OneTimeTaskComponent
 import com.example.android_taskmanagerapp.ui.components.ProgressTask.ProgressTaskComponent
 import com.example.android_taskmanagerapp.ui.components.StreakTask.StreakTaskComponent
-import com.example.android_taskmanagerapp.ui.components.dialogs.EditTaskDialog
-
 @Composable
 fun MyTasksScreen(
-    listViewModel: ListViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listViewModel: ListViewModel = viewModel()
 ){
     val listUiState by listViewModel.uiState.collectAsState()
     var showAddTaskDialog by remember { mutableStateOf(false) }
     var showEditTaskDialog: AbstractTask? by remember { mutableStateOf(null) }
-    Box(){
-        LazyColumn (
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White)
-        ) {
-            item {
-                Box{
-                    Image(
-                        painter = painterResource(R.drawable._8_988682_minimalist_forest_wallpaper_hd),
-                        contentDescription = null,
-                        modifier =  Modifier
-                            .fillMaxWidth()
-                            .height(300.dp),
-                        contentScale = ContentScale.Crop
-                    )
-                    Text(
-                        text = "My Tasks",
-                        style = MaterialTheme.typography.displayMedium,
-                        color = Color.White,
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(start = 14.dp, bottom = 14.dp)
+    Box(
+        modifier = modifier.fillMaxSize()
+    ){
+        if(listUiState.tasks.isEmpty()){
+            Column(modifier = Modifier.fillMaxSize()) {
+                MyTasksScreenTopSection()
+                EmptyTasksScreen()
+            }
+        } else {
+            LazyColumn (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+            ) {
+                item { MyTasksScreenTopSection() }
+                items(listUiState.tasks) {
+                    TaskComponent(
+                        listViewModel = listViewModel,
+                        onDelete = { listViewModel.deleteTask(it) },
+                        onEdit = { showEditTaskDialog = it },
+                        task = it,
                     )
                 }
-            }
-            if(listUiState.tasks.isEmpty()){
-                item {
-                    Column(
-                        modifier = modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Spacer(modifier = Modifier.height(15.dp))
-                        Icon(
-                            painter = painterResource(R.drawable.outline_bedtime_24),
-                            contentDescription = null,
-                            modifier = Modifier.size(150.dp),
-                            tint = Color.LightGray
-                        )
-                        Text(
-                            text = "No tasks yet",
-                            fontSize = 30.sp,
-                            color = Color.LightGray,
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                item{
+                    Spacer(modifier = Modifier.height(100.dp))
                 }
-            } else {
-                items(listUiState.tasks) { task ->
-                    when(task){
-                        is OneTimeTask -> {
-                            OneTimeTaskComponent(
-                                task = task,
-                                onDoneChange = { listViewModel.doneTask(task) },
-                                onDelete = { listViewModel.deleteTask(task) },
-                                onEdit = { showEditTaskDialog = task }
-                            )
-                        }
-                        is ProgressTask -> {
-                            ProgressTaskComponent(
-                                task = task,
-                                onProgressChange = { newProgress -> listViewModel.updateProgress(task, newProgress.toInt())},
-                                onDelete = { listViewModel.deleteTask(task) },
-                                onEdit = { showEditTaskDialog = task }
-                            )
-                        }
-                        is StreakTask -> {
-                            StreakTaskComponent(
-                                task = task,
-                                onStreakIncrease = {listViewModel.increaseStreak(task)},
-                                onStreakReset = {listViewModel.resetStreak(task)},
-                                onDelete = { listViewModel.deleteTask(task) },
-                                onEdit = { showEditTaskDialog = task }
-                            )
-                        }
-                    }
-                }
-            }
-
-            item{
-                Spacer(modifier = Modifier.height(100.dp))
             }
         }
 
@@ -153,48 +100,113 @@ fun MyTasksScreen(
         }
 
         if (showAddTaskDialog){
-            AddTaskDialog (
+            TaskDialog (
+                initialTask = OneTimeTask("", ""),
                 onDismiss = { showAddTaskDialog = !showAddTaskDialog },
-                onConfirm = { listViewModel.addTask(it) }
+                onConfirm = { listViewModel.addTask(it) },
+                confirmText = "Add"
             )
         }
-
-        when(showEditTaskDialog){
-            is OneTimeTask -> {
-                val task = showEditTaskDialog as OneTimeTask
-                EditTaskDialog (
-                    task = task,
-                    onDismiss = { showEditTaskDialog = null },
-                    onConfirm = { oldTask, newTask ->
-                        listViewModel.editTask(oldTask as OneTimeTask, newTask as OneTimeTask)
-                    }
-                )
-            }
-            is ProgressTask -> {
-                val task = showEditTaskDialog as ProgressTask
-                EditTaskDialog (
-                    task = task,
-                    onDismiss = { showEditTaskDialog = null },
-                    onConfirm = { oldTask, newTask ->
-                        listViewModel.editTask(oldTask as ProgressTask, newTask as ProgressTask)
-                    }
-                )
-            }
-            is StreakTask -> {
-                val task = showEditTaskDialog as StreakTask
-                EditTaskDialog (
-                    task = task,
-                    onDismiss = { showEditTaskDialog = null },
-                    onConfirm = { oldTask, newTask ->
-                        listViewModel.editTask(oldTask as StreakTask, newTask as StreakTask)
-                    }
-                )
-            }
+        showEditTaskDialog?.let {
+            TaskDialog (
+                initialTask = it,
+                onDismiss = { showEditTaskDialog = null },
+                onConfirm = { newTask ->
+                    listViewModel.editTask(showEditTaskDialog!!, newTask)
+                },
+                confirmText = "Edit"
+            )
         }
     }
 }
 
 @Composable
-fun TasksList(){
+fun MyTasksScreenTopSection(){
+    Box{
+        Image(
+            painter = painterResource(R.drawable.old_home_background),
+            contentDescription = null,
+            modifier =  Modifier
+                .fillMaxWidth()
+                .height(300.dp),
+            contentScale = ContentScale.Crop
+        )
+        Text(
+            text = stringResource(R.string.my_tasks),
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.displayMedium,
+            color = Color.White,
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(
+                    start = dimensionResource(R.dimen.TopSectionPadding),
+                    bottom = dimensionResource(R.dimen.TopSectionPadding)
+                )
+        )
+    }
+}
 
+@Composable
+fun EmptyTasksScreen(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ){
+        Icon(
+            painter = painterResource(R.drawable.moon),
+            contentDescription = null,
+            modifier = Modifier.size(150.dp),
+            tint = Color.LightGray
+        )
+        Text(
+            text = stringResource(R.string.no_tasks),
+            fontSize = 30.sp,
+            color = Color.LightGray,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+fun TaskComponent(
+    listViewModel: ListViewModel,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit,
+    task: AbstractTask,
+){
+    when(task){
+        is OneTimeTask -> {
+            OneTimeTaskComponent(
+                task = task,
+                onDoneChange = { listViewModel.doneTask(task) },
+                onDelete = onDelete,
+                onEdit = onEdit
+            )
+        }
+        is ProgressTask -> {
+            ProgressTaskComponent(
+                task = task,
+                onProgressChange = { newProgress -> listViewModel.updateProgress(task, newProgress.toInt())},
+                onDelete = onDelete,
+                onEdit = onEdit
+            )
+        }
+        is StreakTask -> {
+            StreakTaskComponent(
+                task = task,
+                onStreakIncrease = {listViewModel.increaseStreak(task)},
+                onStreakReset = {listViewModel.resetStreak(task)},
+                onDelete = onDelete,
+                onEdit = onEdit
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun MyTasksScreenPreview(){
+    MyTasksScreen()
 }
