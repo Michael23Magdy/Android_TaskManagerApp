@@ -1,9 +1,11 @@
-package com.example.android_taskmanagerapp.ui.components.StreakTask
+package com.example.android_taskmanagerapp.ui.components
 
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,43 +26,44 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.android_taskmanagerapp.R
 import com.example.android_taskmanagerapp.model.OneTimeTask
 import com.example.android_taskmanagerapp.model.ProgressTask
 import com.example.android_taskmanagerapp.model.StreakTask
-import com.example.android_taskmanagerapp.ui.components.DeleteAndEditButtons
-import com.example.android_taskmanagerapp.ui.components.DescriptionBox
-import com.example.android_taskmanagerapp.ui.components.ExpandButton
-import com.example.android_taskmanagerapp.ui.components.OneTimeTask.OneTimeTaskComponent
-import com.example.android_taskmanagerapp.ui.components.ProgressTask.ProgressTaskComponent
 
 @Composable
 fun StreakTaskComponent(
     task: StreakTask,
     onStreakIncrease: () -> Unit,
     onStreakReset: () -> Unit,
+    modifier: Modifier = Modifier,
     onDelete: () -> Unit = {},
-    onEdit: () -> Unit = {},
-    modifier: Modifier = Modifier
+    onEdit: () -> Unit = {}
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
+    val springSpec = spring<IntSize>(
+        dampingRatio = Spring.DampingRatioMediumBouncy,
+        stiffness = Spring.StiffnessLow
+    )
+
     Column (
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .animateContentSize(animationSpec = springSpec)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box() {
+            Box {
                 IconButton(
                     onClick = onStreakIncrease,
                     modifier = Modifier
@@ -110,7 +113,11 @@ fun StreakTaskComponent(
                 onExpandChange = { expanded = !expanded }
             )
         }
-        if (expanded) {
+        AnimatedVisibility (
+            visible = expanded,
+            enter = expandVertically (animationSpec = springSpec),
+            exit = shrinkVertically (animationSpec = springSpec)
+        ) {
             Spacer(modifier = Modifier.height(5.dp))
             Column(
                 modifier = Modifier.padding(horizontal = 30.dp)

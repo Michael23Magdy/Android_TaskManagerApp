@@ -45,9 +45,9 @@ import com.example.android_taskmanagerapp.model.OneTimeTask
 import com.example.android_taskmanagerapp.model.ProgressTask
 import com.example.android_taskmanagerapp.model.StreakTask
 import com.example.android_taskmanagerapp.ui.components.TaskDialog
-import com.example.android_taskmanagerapp.ui.components.OneTimeTask.OneTimeTaskComponent
-import com.example.android_taskmanagerapp.ui.components.ProgressTask.ProgressTaskComponent
-import com.example.android_taskmanagerapp.ui.components.StreakTask.StreakTaskComponent
+import com.example.android_taskmanagerapp.ui.components.OneTimeTaskComponent
+import com.example.android_taskmanagerapp.ui.components.ProgressTaskComponent
+import com.example.android_taskmanagerapp.ui.components.StreakTaskComponent
 @Composable
 fun MyTasksScreen(
     modifier: Modifier = Modifier,

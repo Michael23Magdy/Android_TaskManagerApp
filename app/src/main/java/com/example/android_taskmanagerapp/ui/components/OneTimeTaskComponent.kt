@@ -1,5 +1,11 @@
-package com.example.android_taskmanagerapp.ui.components.OneTimeTask
+package com.example.android_taskmanagerapp.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,26 +30,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.android_taskmanagerapp.R
 import com.example.android_taskmanagerapp.model.OneTimeTask
-import com.example.android_taskmanagerapp.ui.components.DeleteAndEditButtons
-import com.example.android_taskmanagerapp.ui.components.DescriptionBox
-import com.example.android_taskmanagerapp.ui.components.ExpandButton
 
 @Composable
 fun OneTimeTaskComponent(
     task: OneTimeTask,
     onDoneChange: () -> Unit,
+    modifier: Modifier = Modifier,
     onDelete: () -> Unit = {},
-    onEdit: () -> Unit = {},
-    modifier: Modifier = Modifier
+    onEdit: () -> Unit = {}
 ){
     var expanded by rememberSaveable { mutableStateOf(false) }
+    val springSpec = spring<IntSize>(
+        dampingRatio = Spring.DampingRatioMediumBouncy,
+        stiffness = Spring.StiffnessLow
+    )
     Column (
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .animateContentSize(animationSpec = springSpec)
     ){
         Row (
             modifier = Modifier
@@ -78,7 +87,11 @@ fun OneTimeTaskComponent(
                 onExpandChange = { expanded = !expanded }
             )
         }
-        if(expanded){
+        AnimatedVisibility (
+            visible = expanded,
+            enter = expandVertically (animationSpec = springSpec),
+            exit = shrinkVertically (animationSpec = springSpec)
+        ) {
             Spacer(modifier = Modifier.height(5.dp))
             Column(
                 modifier = Modifier.padding(horizontal = 30.dp)
@@ -86,11 +99,10 @@ fun OneTimeTaskComponent(
                 DescriptionBox(task.description)
                 DeleteAndEditButtons(
                     onDelete = onDelete,
-                    onEdit = onEdit
+                    onEdit = onEdit,
                 )
             }
         }
-
     }
 }
 
